@@ -1,0 +1,20 @@
+image: tvblack/golang_test:1.11_test_0.0.1
+
+services:
+  - mysql:5.7
+  - redis:latest
+
+variables:
+  MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
+
+before_script:
+  - ln -s /builds /go/src/git.tvblack.com
+  - cd /go/src/git.tvblack.com/tvblack/utils
+
+stages:
+  - test
+
+test:
+  stage: test
+  script:
+    - gocov test -v $(go list ./...|grep -v '/vendor/') |gocov report
